@@ -165,17 +165,12 @@ export default async function linkPackages (
           .map(([rootAlias, depPath]) => ({ rootAlias, depGraphNode: depGraph[depPath] }))
           .filter(({ depGraphNode }) => depGraphNode)
           .map(async ({ rootAlias, depGraphNode }) => {
-            const isDev = Boolean(manifest.devDependencies?.[depGraphNode.name])
-            const isOptional = Boolean(manifest.optionalDependencies?.[depGraphNode.name])
-            if (
-              isDev && !opts.include.devDependencies ||
-              isOptional && !opts.include.optionalDependencies ||
-              !isDev && !isOptional && !opts.include.dependencies
-            ) return
             if (
               (await symlinkDependency(depGraphNode.dir, modulesDir, rootAlias)).reused
             ) return
 
+            const isDev = Boolean(manifest.devDependencies?.[depGraphNode.name])
+            const isOptional = Boolean(manifest.optionalDependencies?.[depGraphNode.name])
             rootLogger.debug({
               added: {
                 dependencyType: isDev && 'dev' || isOptional && 'optional' || 'prod',
@@ -189,11 +184,6 @@ export default async function linkPackages (
             })
           }),
         ...opts.linkedDependenciesByProjectId[id].map(async (linkedDependency) => {
-          if (
-            linkedDependency.dev && !opts.include.devDependencies ||
-            linkedDependency.optional && !opts.include.optionalDependencies ||
-            !linkedDependency.dev && !linkedDependency.optional && !opts.include.dependencies
-          ) return
           const depLocation = resolvePath(rootDir, linkedDependency.resolution.directory)
           return symlinkDirectRootDependency(depLocation, modulesDir, linkedDependency.alias, {
             fromDependenciesField: linkedDependency.dev && 'devDependencies' || linkedDependency.optional && 'optionalDependencies' || 'dependencies',
