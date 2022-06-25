@@ -1,4 +1,5 @@
 import * as add from './add'
+import * as deploy from './deploy'
 import * as install from './install'
 import * as fetch from './fetch'
 import * as link from './link'
@@ -8,4 +9,4 @@ import * as unlink from './unlink'
 import * as update from './update'
 import * as importCommand from './import'
 
-export { add, fetch, install, link, prune, remove, unlink, update, importCommand }
+export { add, deploy, fetch, install, link, prune, remove, unlink, update, importCommand }
