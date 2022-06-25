@@ -951,7 +951,7 @@ const _installInContext: InstallFunction = async (projects, ctx, opts) => {
       } else {
         const directPkgs = [
           ...props<string, DependenciesGraphNode>(
-            Object.values(dependenciesByProjectId[project.id]).filter((depPath) => !ctx.skipped.has(depPath)),
+            Object.values(dependenciesByProjectId[project.id]).filter((depPath) => !ctx.skipped.has(depPath) && (opts.include.devDependencies || !dependenciesGraph[depPath].dev)),
             dependenciesGraph
           ),
           ...linkedDependenciesByProjectId[project.id].map(({ pkgId }) => ({

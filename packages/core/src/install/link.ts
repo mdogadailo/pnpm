@@ -189,6 +189,11 @@ export default async function linkPackages (
             })
           }),
         ...opts.linkedDependenciesByProjectId[id].map(async (linkedDependency) => {
+          if (
+            linkedDependency.dev && !opts.include.devDependencies ||
+            linkedDependency.optional && !opts.include.optionalDependencies ||
+            !linkedDependency.dev && !linkedDependency.optional && !opts.include.dependencies
+          ) return
           const depLocation = resolvePath(rootDir, linkedDependency.resolution.directory)
           return symlinkDirectRootDependency(depLocation, modulesDir, linkedDependency.alias, {
             fromDependenciesField: linkedDependency.dev && 'devDependencies' || linkedDependency.optional && 'optionalDependencies' || 'dependencies',
