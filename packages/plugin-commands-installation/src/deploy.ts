@@ -1,11 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { docsUrl } from '@pnpm/cli-utils'
-import { FILTERING, OPTIONS, UNIVERSAL_OPTIONS } from '@pnpm/common-cli-options-help'
-import { types as allTypes } from '@pnpm/config'
 import PnpmError from '@pnpm/error'
 import rimraf from '@zkochan/rimraf'
-import pick from 'ramda/src/pick'
 import renderHelp from 'render-help'
 import * as install from './install'
 import fsx from 'fs-extra'
@@ -67,12 +64,12 @@ async function copyProject (src: string, dest: string) {
   )
 }
 
-function deployHook (pkg: any) {
+function deployHook (pkg: any) { // eslint-disable-line
   pkg.dependenciesMeta = pkg.dependenciesMeta || {}
   for (const [depName, depVersion] of Object.entries(pkg.dependencies ?? {})) {
     if ((depVersion as string).startsWith('workspace:')) {
       pkg.dependenciesMeta[depName] = {
-        injected: true
+        injected: true,
       }
     }
   }
